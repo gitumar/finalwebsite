@@ -74,7 +74,8 @@
             <div class="row justify-content-center">
                 <!-- Portfolio Item 1-->
                 <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1" onclick="qsFunction()">
+                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1"
+                        onclick="qsFunction()">
                         <div
                             class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                             <div class="portfolio-item-caption-content text-center text-white"><i
@@ -85,7 +86,8 @@
                 </div>
                 <!-- Portfolio Item 2-->
                 <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal2">
+                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal2"
+                        onclick="msFunction()">
                         <div
                             class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                             <div class="portfolio-item-caption-content text-center text-white"><i
@@ -96,7 +98,8 @@
                 </div>
                 <!-- Portfolio Item 3-->
                 <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal3">
+                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal3"
+                        onclick="isFunction()">
                         <div
                             class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                             <div class="portfolio-item-caption-content text-center text-white"><i
@@ -316,7 +319,7 @@
                                 <!-- Portfolio Modal - Image-->
                                 <img class="img-fluid rounded mb-5" src="assets/img/portfolio/cake.png" alt="..." />
                                 <!-- Portfolio Modal - Text-->
-                                <p class="mb-4">This is Merge Sort.</p>
+                                <p id="ms" class="mb-4">This is Merge Sort.</p>
                                 <button class="btn btn-primary" data-bs-dismiss="modal">
                                     <i class="fas fa-xmark fa-fw"></i>
                                     Close Window
@@ -350,7 +353,7 @@
                                 <!-- Portfolio Modal - Image-->
                                 <img class="img-fluid rounded mb-5" src="assets/img/portfolio/circus.png" alt="..." />
                                 <!-- Portfolio Modal - Text-->
-                                <p class="mb-4">This is Insertion Sort.</p>
+                                <p id="is" class="mb-4">This is Insertion Sort.</p>
                                 <button class="btn btn-primary" data-bs-dismiss="modal">
                                     <i class="fas fa-xmark fa-fw"></i>
                                     Close Window
@@ -489,15 +492,7 @@
             var t1 = performance.now();
             var clientTime = t1 - t0;
 
-            function giveMeArray(size) {
-                var arr = new Array(size);
 
-                for (let index = 0; index < size; index++) {
-                    arr[index] = Math.floor(Math.random() * 100) + 1;
-                }
-                return arr;
-
-            }
             function quickSortJS(arr) {
                 if (arr.length < 2) {
                     return arr;
@@ -523,7 +518,118 @@
                     ...quickSortJS(right)
                 ];
             }
-            document.getElementById("qs").innerHTML = "Quick sort exection time was: " + clientTime + "ms"
+            document.getElementById("qs").innerHTML = "Quick sort exection time was: " + clientTime.toFixed(2) + "ms"
+        }
+
+        function msFunction() {
+            var size = 100000;
+            var arr = giveMeArray(size);
+
+            t0 = performance.now();
+            mergeSort(arr, 0, size - 1);
+            t1 = performance.now();
+            clientTime = t1 - t0;
+
+            function merge(arr, l, m, r) {
+                var n1 = m - l + 1;
+                var n2 = r - m;
+
+                // Create temp arrays
+                var L = new Array(n1);
+                var R = new Array(n2);
+
+                // Copy data to temp arrays L[] and R[]
+                for (var i = 0; i < n1; i++)
+                    L[i] = arr[l + i];
+                for (var j = 0; j < n2; j++)
+                    R[j] = arr[m + 1 + j];
+
+                // Merge the temp arrays back into arr[l..r]
+
+                // Initial index of first subarray
+                var i = 0;
+
+                // Initial index of second subarray
+                var j = 0;
+
+                // Initial index of merged subarray
+                var k = l;
+
+                while (i < n1 && j < n2) {
+                    if (L[i] <= R[j]) {
+                        arr[k] = L[i];
+                        i++;
+                    }
+                    else {
+                        arr[k] = R[j];
+                        j++;
+                    }
+                    k++;
+                }
+
+                // Copy the remaining elements of
+                // L[], if there are any
+                while (i < n1) {
+                    arr[k] = L[i];
+                    i++;
+                    k++;
+                }
+
+                // Copy the remaining elements of
+                // R[], if there are any
+                while (j < n2) {
+                    arr[k] = R[j];
+                    j++;
+                    k++;
+                }
+            }
+
+            function mergeSort(arr, l, r) {
+                if (l >= r) {
+                    return;//returns recursively
+                }
+                var m = l + parseInt((r - l) / 2);
+                mergeSort(arr, l, m);
+                mergeSort(arr, m + 1, r);
+                merge(arr, l, m, r);
+            }
+            document.getElementById("ms").innerHTML = "Merge sort exection time was: " + clientTime.toFixed(2) + "ms"
+        }
+
+        function isFunction() {
+            var size = 50000;
+            var arr = giveMeArray(size);
+
+            t0 = performance.now();
+            insertionSortJs(arr, size)
+            t1 = performance.now();
+            clientTime = t1 - t0;
+
+            function insertionSortJs(arr, n) {
+                let i, key, j;
+                for (i = 1; i < n; i++) {
+                    key = arr[i];
+                    j = i - 1;
+
+                    while (j >= 0 && arr[j] > key) {
+                        arr[j + 1] = arr[j];
+                        j = j - 1;
+                    }
+                    arr[j + 1] = key;
+                }
+            }
+
+            document.getElementById("is").innerHTML = "Insertion sort exection time was: " + clientTime.toFixed(2) + "ms"
+        }
+
+        function giveMeArray(size) {
+            var arr = new Array(size);
+
+            for (let index = 0; index < size; index++) {
+                arr[index] = Math.floor(Math.random() * 100) + 1;
+            }
+            return arr;
+
         }
 
     </script>
